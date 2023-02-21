@@ -3,7 +3,8 @@ Run vm_sub.py in a separate terminal on your VM."""
 
 import paho.mqtt.client as mqtt
 import time
-from datetime import datetime
+from datetime import datetime 
+from datetime import date
 import socket
 
 """This function (or "callback") will be executed when this client receives 
@@ -12,10 +13,14 @@ def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
 
+
 if __name__ == '__main__':
     #get IP address
-    ip_address=0 
-    """your code here"""
+    ip_address=0 #does it need to be 0?
+    """my code here"""
+    hostname = socket.gethostname()
+    ip_address = socket.gethostbyname(hostname) 
+
     #create a client object
     client = mqtt.Client()
     
@@ -41,11 +46,24 @@ if __name__ == '__main__':
 
     while True:
         #replace user with your USC username in all subscriptions
-        client.publish("user/ipinfo", f"{ip_address}")
+
+        client.publish("nayelide/ipinfo", f"{ip_address}")
         print("Publishing ip address")
         time.sleep(4)
 
         #get date and time 
-        """your code here"""
+        todays_date = date.today()
+        #source: https://www.programiz.com/python-programming/datetime/current-datetime
+
+        now = datetime.now()
+        current_time = now.strftime("%H:%M:%S")
+
+
         #publish date and time in their own topics
-        """your code here"""
+        client.publish("nayelide/date", f"{todays_date}")
+        print("Publishing today's date")
+        time.sleep(4)
+
+        client.publish("nayelide/time", f"{current_time}")
+        print("Publishing current time")
+        time.sleep(4)
